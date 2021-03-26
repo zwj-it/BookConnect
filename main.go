@@ -13,9 +13,9 @@ import (
 	"go.uber.org/zap"
 )
 
-// @title Zwj_bluebell
+// @title Zwj
 // @version 1.0
-// @description 韭菜社区
+// @description BookConnect社区
 // @termsOfService http://swagger.io/terms/
 
 // @contact.name 474527746@qq.com

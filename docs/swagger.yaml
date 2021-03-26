@@ -1,0 +1,392 @@
+basePath: /api/v1
+definitions:
+  controllers._ResponseCommunity:
+    properties:
+      code:
+        description: 业务状态响应码
+        type: integer
+      data:
+        description: 返回数据
+        items:
+          $ref: '#/definitions/models.CommunityDetail'
+        type: array
+      message:
+        description: 提示信息
+        type: string
+    type: object
+  controllers._ResponseCommunityList:
+    properties:
+      code:
+        description: 业务状态响应码
+        type: integer
+      message:
+        description: 提示信息
+        type: string
+    type: object
+  controllers._ResponsePost:
+    properties:
+      code:
+        description: 业务状态响应码
+        type: integer
+      message:
+        description: 提示信息
+        type: string
+    type: object
+  controllers._ResponsePostList:
+    properties:
+      code:
+        description: 业务状态响应码
+        type: integer
+      data:
+        description: 返回数据
+        items:
+          $ref: '#/definitions/models.ApiPostDetail'
+        type: array
+      message:
+        description: 提示信息
+        type: string
+    type: object
+  controllers._ResponseUser:
+    properties:
+      code:
+        description: 业务状态响应码
+        type: integer
+      message:
+        description: 提示信息
+        type: string
+    type: object
+  models.ApiPostDetail:
+    properties:
+      author_id:
+        example: "0"
+        type: string
+      author_name:
+        type: string
+      community_id:
+        type: integer
+      content:
+        type: string
+      create_time:
+        type: string
+      id:
+        type: integer
+      introduction:
+        description: omitempty字段为空不展示
+        type: string
+      name:
+        type: string
+      status:
+        type: integer
+      title:
+        type: string
+      vote_num:
+        type: integer
+    required:
+    - community_id
+    - content
+    - title
+    type: object
+  models.CommunityDetail:
+    properties:
+      create_time:
+        type: string
+      id:
+        type: integer
+      introduction:
+        description: omitempty字段为空不展示
+        type: string
+      name:
+        type: string
+    type: object
+host: 127.0.0.1:8084
+info:
+  contact:
+    email: support@swagger.io
+    name: 474527746@qq.com
+    url: http://www.swagger.io/support
+  description: BookConnect社区
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Zwj
+  version: "1.0"
+paths:
+  /community:
+    get:
+      consumes:
+      - application/json
+      description: 根据url中的community_id查询对应帖子详情
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: UserID  可以直接从当前请求中获取
+        in: query
+        name: community_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers._ResponseCommunity'
+      security:
+      - ApiKeyAuth: []
+      summary: 社区分类详情接口
+      tags:
+      - 社区相关接口
+  /community/:id:
+    get:
+      consumes:
+      - application/json
+      description: 查询已有帖子
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers._ResponseCommunityList'
+      security:
+      - ApiKeyAuth: []
+      summary: 查询社区列表接口
+      tags:
+      - 社区相关接口
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: 注册新用户
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: password
+        required: true
+        type: string
+      - in: query
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers._ResponseUser'
+      security:
+      - ApiKeyAuth: []
+      summary: 用户登录接口
+      tags:
+      - 用户相关接口
+  /post:
+    post:
+      consumes:
+      - application/json
+      description: 根据前端传来的数据创建帖子
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - example: "0"
+        in: query
+        name: author_id
+        type: string
+      - in: query
+        name: community_id
+        required: true
+        type: integer
+      - in: query
+        name: content
+        required: true
+        type: string
+      - in: query
+        name: create_time
+        type: string
+      - in: query
+        name: id
+        type: integer
+      - in: query
+        name: status
+        type: integer
+      - in: query
+        name: title
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers._ResponsePost'
+      security:
+      - ApiKeyAuth: []
+      summary: 创建帖子接口
+      tags:
+      - 帖子相关接口
+  /post/:id:
+    get:
+      consumes:
+      - application/json
+      description: 验证用户id是否正确并
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: UserID  可以直接从当前请求中获取
+        in: query
+        name: post_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers._ResponsePostList'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取帖子详情接口
+      tags:
+      - 帖子相关接口
+  /posts:
+    get:
+      consumes:
+      - application/json
+      description: 根据url绑定的Page和Size查询帖子列表接口
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 可以为空，为空则查询所有帖子
+        in: query
+        name: community_id
+        type: integer
+      - description: 排序依据
+        example: time
+        in: query
+        name: order
+        type: string
+      - description: 页码
+        example: 1
+        in: query
+        name: page
+        type: integer
+      - description: 每页数据量
+        example: 10
+        in: query
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers._ResponsePostList'
+      security:
+      - ApiKeyAuth: []
+      summary: 原版帖子列表接口
+      tags:
+      - 帖子相关接口
+  /posts2:
+    get:
+      consumes:
+      - application/json
+      description: 可按社区/按时间/分数排序查询帖子列表接口
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 可以为空，为空则查询所有帖子
+        in: query
+        name: community_id
+        type: integer
+      - description: 排序依据
+        example: time
+        in: query
+        name: order
+        type: string
+      - description: 页码
+        example: 1
+        in: query
+        name: page
+        type: integer
+      - description: 每页数据量
+        example: 10
+        in: query
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers._ResponsePostList'
+      security:
+      - ApiKeyAuth: []
+      summary: 升级版帖子列表接口
+      tags:
+      - 帖子相关接口
+  /signup:
+    post:
+      consumes:
+      - application/json
+      description: 注册新用户
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: password
+        required: true
+        type: string
+      - in: query
+        name: re_password
+        required: true
+        type: string
+      - in: query
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers._ResponseUser'
+      security:
+      - ApiKeyAuth: []
+      summary: 用户注册接口
+      tags:
+      - 用户相关接口
+swagger: "2.0"
